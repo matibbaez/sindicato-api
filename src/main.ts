@@ -12,11 +12,9 @@ async function bootstrap() {
   
   app.enableCors({
     origin: [
-      'https://reclamaya.ar', 
-      'https://www.reclamaya.ar', 
-      'https://admin.reclamaya.ar', 
       'http://localhost:4200',
-      'http://localhost:3000'
+      'http://localhost:3000',
+      'https://sindicato-web.vercel.app' // <--- LA URL DE VERCEL ACÁ
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
