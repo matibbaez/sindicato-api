@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -43,13 +43,15 @@ export class UsersController {
   ) {
     const rolUsuarioLogueado = req.user?.role;
     if (rolUsuarioLogueado !== 'Admin' && rolUsuarioLogueado !== 'ADMIN') {
-      throw new UnauthorizedException('Acceso denegado. Solo un administrador puede cambiar los roles de los usuarios.');
+      // Cambiamos a ForbiddenException (403) para que Angular no cierre la sesión
+      throw new ForbiddenException('Acceso denegado. Solo un administrador puede cambiar los roles de los usuarios.');
     }
 
-    // 👇 LIMITAMOS ESTRICTAMENTE A LOS DOS ROLES OPERATIVOS DEL NUEVO SISTEMA
-    const rolesPermitidos = ['Tramitador', 'Sindicato'];
+    // 👇 AGREGAMOS 'Admin' A LA LISTA PARA QUE PUEDAS CREAR OTROS ADMINISTRADORES
+    const rolesPermitidos = ['Tramitador', 'Sindicato', 'Admin', 'ADMIN'];
     if (!rolesPermitidos.includes(nuevoRol)) {
-      throw new UnauthorizedException(`Operación rechazada. No está permitido asignar el rol "${nuevoRol}".`);
+      // Cambiamos a BadRequestException (400) para evitar el logout del interceptor
+      throw new BadRequestException(`Operación rechazada. No está permitido asignar el rol "${nuevoRol}".`);
     }
 
     return this.usersService.cambiarRol(id, nuevoRol);
@@ -67,7 +69,8 @@ export class UsersController {
     const userId = req.user?.id || req.user?.userId || req.user?.sub;
 
     if (!userId) {
-      throw new UnauthorizedException('Token inválido: No se pudo extraer el ID del usuario.');
+      // Dejamos este como 401 porque si no hay ID, el token sí está corrupto y DEBE cerrar sesión
+      throw new ForbiddenException('Token inválido: No se pudo extraer el ID del usuario.');
     }
 
     const { passwordActual, passwordNueva } = body;
