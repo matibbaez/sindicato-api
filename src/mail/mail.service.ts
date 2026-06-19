@@ -8,14 +8,14 @@ export class MailService {
   private resend!: Resend;
   private mailFrom: string;
   
-  // 🎨 COLORES DE MARCA
-  private primaryColor = '#2563eb'; // Blue-600
+  // 🎨 COLORES DE MARCA ASIMM
+  private primaryColor = '#2563eb'; // Azul ASIMM
   private darkColor = '#111827';    // Gris oscuro
-  private webUrl = 'https://reclamaya.ar';
+  private webUrl = 'https://accidentes.asimm.org.ar';
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get('RESEND_API_KEY');
-    this.mailFrom = this.configService.get('MAIL_FROM') || 'no-reply@reclamaya.ar';
+    this.mailFrom = this.configService.get('MAIL_FROM') || 'no-reply@asimm.org.ar';
 
     if (apiKey) {
       this.resend = new Resend(apiKey);
@@ -32,20 +32,20 @@ export class MailService {
 
     const content = `
       <h1 style="color: ${this.darkColor}; font-size: 24px; margin-bottom: 16px;">Hola, ${nombre}</h1>
-      <p style="color: #4b5563; font-size: 16px; line-height: 24px;">Gracias por confiar en <strong>Reclama Ya!</strong></p>
-      <p style="color: #4b5563; font-size: 16px; line-height: 24px;">Hemos recibido su reclamo y ya fue derivado a nuestro equipo.</p>
+      <p style="color: #4b5563; font-size: 16px; line-height: 24px;">Gracias por confiar en el <strong>Sindicato ASIMM</strong>.</p>
+      <p style="color: #4b5563; font-size: 16px; line-height: 24px;">Hemos recibido tu reclamo y ya fue derivado a nuestro equipo legal.</p>
 
       <div style="background-color: #f0f9ff; border-left: 4px solid ${this.primaryColor}; padding: 16px; margin: 24px 0; border-radius: 4px;">
         <p style="margin: 0; color: #0c4a6e; font-size: 15px;">
-          Dentro de las próximas <strong>72 horas hábiles</strong>, un tramitador será asignado para comenzar a trabajar en su caso.
+          Dentro de las próximas <strong>72 horas hábiles</strong>, un tramitador será asignado para comenzar a trabajar en tu caso.
         </p>
       </div>
       
-      <p style="color: #4b5563; font-size: 14px;">Nuestro compromiso es acompañarlo en cada paso para obtener la mejor indemnización.</p>
+      <p style="color: #4b5563; font-size: 14px;">Nuestro compromiso es acompañarte en cada paso para que obtengas la mejor indemnización.</p>
 
       <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;">
 
-      <p style="text-align: center; font-size: 14px; color: #6b7280; margin-bottom: 8px;">Su Código de Seguimiento:</p>
+      <p style="text-align: center; font-size: 14px; color: #6b7280; margin-bottom: 8px;">Tu Código de Seguimiento:</p>
       <div style="text-align: center; margin-bottom: 32px;">
         <span style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: ${this.primaryColor}; background: #eff6ff; padding: 10px 20px; border-radius: 8px; border: 1px dashed ${this.primaryColor};">${codigo}</span>
       </div>
@@ -55,7 +55,7 @@ export class MailService {
       </div>
     `;
 
-    await this.sendMail(email, '✅ Reclamo Enviado Exitosamente', this.getTemplate(content));
+    await this.sendMail(email, '✅ Reclamo Ingresado Exitosamente', this.getTemplate(content));
   }
 
   // 🔔 NUEVO: AVISO AL ADMIN DE NUEVO USUARIO
@@ -95,7 +95,7 @@ export class MailService {
       <h2 style="color: #be123c;">🚨 Nuevo Siniestro Ingresado</h2>
       <p>Se requiere asignación de tramitador (Plazo: 72hs hábiles).</p>
       <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-        <tr style="border-bottom: 1px solid #e5e7eb;"><td style="padding: 8px 0; color: #6b7280;">Cliente:</td><td style="padding: 8px 0; font-weight: bold;">${data.nombre}</td></tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;"><td style="padding: 8px 0; color: #6b7280;">Afiliado/Cliente:</td><td style="padding: 8px 0; font-weight: bold;">${data.nombre}</td></tr>
         <tr style="border-bottom: 1px solid #e5e7eb;"><td style="padding: 8px 0; color: #6b7280;">DNI:</td><td style="padding: 8px 0; font-weight: bold;">${data.dni}</td></tr>
         <tr style="border-bottom: 1px solid #e5e7eb;"><td style="padding: 8px 0; color: #6b7280;">Tipo:</td><td style="padding: 8px 0; font-weight: bold;">${data.tipo}</td></tr>
         <tr><td style="padding: 8px 0; color: #6b7280;">Código:</td><td style="padding: 8px 0; font-weight: bold; color: ${this.primaryColor};">${data.codigo_seguimiento}</td></tr>
@@ -123,9 +123,9 @@ export class MailService {
       case ReclamoEstado.RECEPCIONADO:
         subject = '📁 Reclamo Recepcionado';
         bodyText = `
-          <p>Su reclamo ya cuenta con un <strong>tramitador asignado</strong>, quien está revisando la documentación.</p>
+          <p>Tu reclamo ya cuenta con un <strong>tramitador asignado</strong>, quien está revisando la documentación.</p>
           <ul style="padding-left: 20px; color: #374151;">
-            <li style="margin-bottom: 8px;">Si el reclamo <strong>no es viable legalmente</strong>, le informaremos el rechazo.</li>
+            <li style="margin-bottom: 8px;">Si el reclamo <strong>no es viable legalmente</strong>, te informaremos el rechazo.</li>
             <li>Si <strong>es viable</strong>, en máx 48hs hábiles lo iniciaremos ante la aseguradora.</li>
           </ul>
         `;
@@ -134,7 +134,7 @@ export class MailService {
         subject = '¡Buenas noticias!';
         statusColor = '#16a34a'; // Verde
         bodyText = `
-          <p><strong>Su reclamo fue iniciado correctamente ante la aseguradora.</strong></p>
+          <p><strong>Tu reclamo fue iniciado correctamente ante la aseguradora.</strong></p>
           <ul style="padding-left: 20px; color: #374151;">
             <li style="margin-bottom: 8px;">Iniciamos comunicaciones con el seguro.</li>
             <li>La aseguradora analizará las pruebas y realizará pericias antes de ofertar.</li>
@@ -146,8 +146,8 @@ export class MailService {
         statusColor = '#ea580c'; // Naranja
         bodyText = `
           <p>Estamos gestionando el <strong>monto indemnizatorio</strong> con la aseguradora.</p>
-          <p>En breve le informaremos la cifra propuesta.</p>
-          <p><strong>Nuestro objetivo es lograr el mejor acuerdo posible para usted.</strong></p>
+          <p>En breve te informaremos la cifra propuesta.</p>
+          <p><strong>Nuestro objetivo es lograr el mejor acuerdo posible para vos.</strong></p>
         `;
         break;
       case ReclamoEstado.INDEMNIZANDO:
@@ -156,7 +156,7 @@ export class MailService {
         bodyText = `
           <p><strong>El acuerdo ya fue cerrado exitosamente.</strong></p>
           <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px; margin: 16px 0;">
-            <p style="margin:0; color: #166534;">En un plazo máximo de <strong>30 días hábiles</strong>, el monto se acreditará en su cuenta.</p>
+            <p style="margin:0; color: #166534;">En un plazo máximo de <strong>30 días hábiles</strong>, el monto se acreditará en tu cuenta.</p>
           </div>
           <p style="font-size: 14px; color: #6b7280;">* Una vez efectuado el pago, se finiquitarán los honorarios profesionales (20%).</p>
         `;
@@ -165,23 +165,23 @@ export class MailService {
         subject = '¡Felicitaciones!';
         statusColor = '#16a34a';
         bodyText = `
-          <p><strong>Su reclamo fue acordado y cobrado exitosamente.</strong></p>
-          <p>Gracias por confiar en Reclama Ya! Recuerde que estamos a su disposición.</p>
+          <p><strong>Tu reclamo fue acordado y cobrado exitosamente.</strong></p>
+          <p>Gracias por confiar en el equipo legal de ASIMM. Recordá que estamos siempre a tu disposición.</p>
         `;
         break;
       case ReclamoEstado.RECHAZADO:
-        subject = '⚠️ Información sobre su reclamo';
+        subject = '⚠️ Información sobre tu reclamo';
         statusColor = '#dc2626';
         bodyText = `
-          <p>Lamentamos informarle que, tras el análisis legal, su reclamo fue <strong>rechazado por improcedencia</strong>.</p>
-          <p>Para más información, contáctenos a través de la plataforma.</p>
+          <p>Lamentamos informarte que, tras el análisis legal, tu reclamo fue <strong>rechazado por improcedencia</strong>.</p>
+          <p>Para más información, contactate con nosotros a través del Whatsapp de la plataforma.</p>
         `;
         break;
       default: return;
     }
 
     const content = `
-      <h1 style="color: ${this.darkColor}; font-size: 22px;">Novedades en su caso</h1>
+      <h1 style="color: ${this.darkColor}; font-size: 22px;">Novedades en tu caso</h1>
       <p style="color: #6b7280; margin-bottom: 20px;">Hola ${nombre}, hay un cambio de estado en el expediente <strong>#${codigo}</strong>.</p>
       
       <div style="text-align: center; margin: 25px 0;">
@@ -209,7 +209,7 @@ export class MailService {
 
     const content = `
       <h2 style="color: ${this.darkColor};">Hola, ${nombreTramitador}</h2>
-      <p style="font-size: 16px;">Se le ha asignado un nuevo caso para gestionar en la plataforma.</p>
+      <p style="font-size: 16px;">Se te ha asignado un nuevo caso para gestionar en la plataforma.</p>
       
       <div style="background-color: #f0f9ff; border-left: 4px solid ${this.primaryColor}; padding: 15px; border-radius: 4px; margin: 20px 0;">
         <table style="width: 100%; border-collapse: collapse;">
@@ -224,7 +224,7 @@ export class MailService {
         </table>
       </div>
 
-      <p style="color: #4b5563; font-size: 14px;">Recuerde revisar la documentación cargada para comenzar a trabajar en el expediente.</p>
+      <p style="color: #4b5563; font-size: 14px;">Recordá revisar la documentación cargada para comenzar a trabajar en el expediente.</p>
 
       <div style="text-align: center; margin-top: 25px;">
         <a href="${this.webUrl}/admin" style="${this.getButtonStyle()}">Ir al Panel de Gestión</a>
@@ -248,7 +248,7 @@ export class MailService {
       
       <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0;">
          <p style="margin:5px 0"><strong>Caso:</strong> #${codigo}</p>
-         <p style="margin:5px 0"><strong>Cliente:</strong> ${nombreCliente}</p>
+         <p style="margin:5px 0"><strong>Afiliado/Cliente:</strong> ${nombreCliente}</p>
          <p style="margin:5px 0"><strong>Nuevo Estado:</strong> <span style="color:${this.primaryColor}; font-weight:bold;">${nuevoEstado}</span></p>
       </div>
 
@@ -292,21 +292,17 @@ export class MailService {
   }
 
   // ==========================================
-  // 5. APROBACIÓN DE CUENTA (LEGALTECH)
+  // 5. APROBACIÓN DE CUENTA
   // ==========================================
   async sendAccountApproved(email: string, nombre: string) {
     if (!this.resend) return;
     
     const content = `
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: ${this.darkColor}; font-size: 24px; margin-bottom: 10px;">Bienvenido a nuestro sistema LegalTech</h1>
+        <h1 style="color: ${this.darkColor}; font-size: 24px; margin-bottom: 10px;">¡Cuenta Aprobada!</h1>
         
         <p style="color: ${this.primaryColor}; font-weight: bold; font-size: 15px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
-          Trazabilidad • Transparencia • Innovación
-        </p>
-        
-        <p style="color: #6b7280; font-size: 14px; margin-top: 8px; font-style: italic;">
-          "Transferencia de administración de gestión en tus siniestros"
+          Plataforma de Gestión ASIMM
         </p>
       </div>
 
@@ -314,16 +310,16 @@ export class MailService {
 
       <p style="font-size: 16px; line-height: 1.6; color: #374151;">
         Hola <strong>${nombre}</strong>,<br><br>
-        Tu cuenta ha sido verificada correctamente. Ya tenés acceso total a la plataforma para comenzar a cargar y gestionar reclamos.
+        Tu usuario ha sido verificado correctamente. Ya tenés acceso al portal para comenzar a trabajar en los expedientes.
       </p>
 
       <br>
       <div style="text-align: center;">
-        <a href="${this.webUrl}/login" style="${this.getButtonStyle()}">Ingresar a mi Cuenta</a>
+        <a href="${this.webUrl}/login" style="${this.getButtonStyle()}">Ingresar al Portal</a>
       </div>
     `;
 
-    await this.sendMail(email, '🎉 Cuenta Aprobada - Bienvenido a Reclama Ya', this.getTemplate(content));
+    await this.sendMail(email, '🎉 Cuenta Aprobada - Portal ASIMM', this.getTemplate(content));
   }
 
   // ==========================================
@@ -345,7 +341,7 @@ export class MailService {
     }
   }
 
-  // 👇 TEMPLATE MAESTRO: LOGO DE TEXTO CSS
+  // 👇 TEMPLATE MAESTRO: LOGO DE ASIMM EN TEXTO
   private getTemplate(bodyContent: string): string {
     return `
       <!DOCTYPE html>
@@ -363,9 +359,8 @@ export class MailService {
               
               <div style="margin-bottom: 24px;">
                  <a href="${this.webUrl}" style="text-decoration: none; display: inline-block;">
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 700; color: ${this.darkColor}; letter-spacing: -1px;">Reclama</span>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900; font-style: italic; color: ${this.primaryColor}; margin-left: 1px;">Ya</span>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 700; color: ${this.primaryColor};">.</span>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 900; font-style: italic; color: ${this.darkColor}; letter-spacing: -1px;">ASIMM</span>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 700; color: ${this.primaryColor};">.</span>
                  </a>
               </div>
 
@@ -381,16 +376,16 @@ export class MailService {
                 <tr>
                   <td style="padding: 0 40px 40px 40px; color: #6b7280; font-size: 14px;">
                     <p style="margin: 0;">Atentamente,</p>
-                    <p style="margin: 5px 0; font-weight: bold; color: #374151;">Equipo ReclamaYa!</p>
+                    <p style="margin: 5px 0; font-weight: bold; color: #374151;">Equipo Legal ASIMM</p>
                   </td>
                 </tr>
               </table>
 
               <div style="margin-top: 24px; text-align: center; color: #9ca3af; font-size: 12px;">
-                <p style="margin: 4px 0;">© ${new Date().getFullYear()} Reclama Ya.</p>
+                <p style="margin: 4px 0;">© ${new Date().getFullYear()} Sindicato ASIMM.</p>
                 <p style="margin: 12px 0;">
                   <a href="${this.webUrl}" style="color: #9ca3af; text-decoration: underline;">Web</a> | 
-                  <a href="mailto:contacto@reclamaya.ar" style="color: #9ca3af; text-decoration: underline;">Contacto</a>
+                  <a href="mailto:accidentes@asimm.org.ar" style="color: #9ca3af; text-decoration: underline;">Contacto</a>
                 </p>
               </div>
 
