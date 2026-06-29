@@ -11,11 +11,12 @@ export class MailService {
   // 🎨 COLORES DE MARCA ASIMM
   private primaryColor = '#2563eb'; // Azul ASIMM
   private darkColor = '#111827';    // Gris oscuro
-  private webUrl = 'https://accidentes.asimm.org.ar';
+  private webUrl = 'https://www.reclamarya.ar';
+  private whatsappNumber = '5491168498970';
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get('RESEND_API_KEY');
-    this.mailFrom = this.configService.get('MAIL_FROM') || 'no-reply@asimm.org.ar';
+    this.mailFrom = this.configService.get('MAIL_FROM') || 'no-reply@reclamarya.ar';
 
     if (apiKey) {
       this.resend = new Resend(apiKey);
@@ -385,7 +386,7 @@ export class MailService {
                 <p style="margin: 4px 0;">© ${new Date().getFullYear()} Sindicato ASIMM.</p>
                 <p style="margin: 12px 0;">
                   <a href="${this.webUrl}" style="color: #9ca3af; text-decoration: underline;">Web</a> | 
-                  <a href="mailto:accidentes@asimm.org.ar" style="color: #9ca3af; text-decoration: underline;">Contacto</a>
+                  <a href="https://wa.me/${this.whatsappNumber}" style="color: #9ca3af; text-decoration: underline;">Contacto</a>
                 </p>
               </div>
 
