@@ -14,7 +14,9 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'http://localhost:3000',
-      'https://sindicato-web.vercel.app' // <--- LA URL DE VERCEL ACÁ
+      'https://reclamarya.ar',
+      'https://www.reclamarya.ar',
+      'https://sindicato-web.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
